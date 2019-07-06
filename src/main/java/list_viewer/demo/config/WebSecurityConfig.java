@@ -1,23 +1,18 @@
 package list_viewer.demo.config;
 
-import list_viewer.demo.domain.Role;
 import list_viewer.demo.domain.User;
 import list_viewer.demo.repo.UserRepository;
-import org.hibernate.mapping.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.PrincipalExtractor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 
 import javax.sql.DataSource;
 import java.time.LocalDateTime;
-import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
@@ -53,6 +48,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 newUser.setGender((String)map.get("gender"));
                 newUser.setUserpic((String)map.get("picture"));
                 newUser.setLocale((String)map.get("locale"));
+//                newUser.setRoles(Collections.singleton(Role.USER));
                 return newUser;
             });
             user.setLastVisit(LocalDateTime.now());

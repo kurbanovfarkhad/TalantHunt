@@ -14,24 +14,45 @@ Vue.component('car-form',{
     props:['cars','item'],
     data: function(){
         return{
-            text:'',
-            id:''
+            id:'',
+            model:'',
+            mileage:null,
+            yearOfIssue:null,
+            owner:'',
+            phone:'',
+            address:'',
+            master:'',
+            description:''
         }
     },
-   template:
-       '<div>' +
-        '<input type="text" placeholder="write" v-model="text" />' +
+    template:
+        '<div>' +
+        '<input type="text" placeholder="model" v-model="model" />' +
+        '<input type="number" placeholder="mileage" v-model="mileage" />' +
+        '<input type="date" value="2013-01-08" placeholder="yearOfIssue" v-model="yearOfIssue" />' +
+        '<input type="text" placeholder="write" v-model="description" />' +
+        '<input type="text" placeholder="phone" v-model="phone" />' +
+        '<input type="text" placeholder="address" v-model="address" />' +
+        '<input type="text" placeholder="master" v-model="master" />' +
         '<input type="button" value="save" @click="save"/>' +
-       '</div>',
+        '</div>',
     methods:{
         save(){
-            var text = {description:this.text};
+            var text = {
+                description:this.description,
+                yearOfIssue:this.yearOfIssue,
+                phone:this.phone,
+                address:this.address,
+                master:this.master,
+                model:this.model,
+                mileage:this.mileage
+            };
             if (this.id){
                 api.update({id:this.id},text).then(res=>{
                     res.json().then(data=>{
                         var index = getIndex(this.cars, data.id);
                         this.cars.splice(index, 1, data);
-                        this.text = '';
+                        this.description = '';
                         this.id = '';
                     })
                 });
@@ -44,8 +65,14 @@ Vue.component('car-form',{
     },
     watch:{
         item:function(newVal,oldVal){
-            this.text = newVal.description;
-            this.id = newVal.id
+            this.description = newVal.description;
+            this.id = newVal.id;
+            this.yearOfIssue=newVal.yearOfIssue;
+            this.phone=newVal.phone;
+            this.address=newVal.address;
+            this.master=newVal.master;
+            this.model=newVal.model;
+            this.mileag=newVal.mileag;
         }
     }
 });
@@ -71,9 +98,9 @@ Vue.component('cars-row',{
     },
     template:
         '<div>'+
-                '{{item.id}} <i>{{item.description}}</i>' +
-                '<input type="button" value="edit" @click="edit">' +
-                '<input type="button" value="delete" @click="del">' +
+        '{{item.id}} <i>{{item.description}}</i>' +
+        '<input type="button" value="edit" @click="edit">' +
+        '<input type="button" value="delete" @click="del">' +
         '</div>'
 });
 
@@ -81,19 +108,19 @@ Vue.component('cars-row',{
 var app = new Vue({
     el: '#app',
     template:
-    '<div>' +
+        '<div>' +
         '<div v-if="!profile">' +
-            '<a href="/login">Login Google</a>' +
+        '<a href="/login">Login Google</a>' +
         '</div>'+
         '<div v-else>' +
-            '<a href="/logout">{{profile.name}} logout</a>' +
-            '<car-form :cars = "cars" :item="item"></car-form>'+
-            '<cars-row v-for="item in cars" :item="item" :editcars="editcars" :cars="cars">' +
-            '</cars-row>' +
+        '<a href="/logout">{{profile.name}} logout</a>' +
+        '<car-form :cars = "cars" :item="item"></car-form>'+
+        '<cars-row v-for="item in cars" v-bind:key="item.id" :item="item" :editcars="editcars" :cars="cars">' +
+        '</cars-row>' +
         '</div>' +
-    '</div>',
+        '</div>',
     data: {
-        cars: frontendData.cars,
+        cars: [],
         item:'',
         profile:frontendData.profile
     },

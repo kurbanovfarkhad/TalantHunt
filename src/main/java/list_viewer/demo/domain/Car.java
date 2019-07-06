@@ -3,11 +3,12 @@ package list_viewer.demo.domain;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 @Entity
 @Table
-public class Car {
+public class Car implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -16,7 +17,9 @@ public class Car {
     private int mileage;
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern = "yyyy")
     private Date yearOfIssue;
-    private String owner;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "owner_id")
+    private User owner;
     @Column(name="clientPhone")
     private String phone;
     @Column(name="clientAddress")
@@ -55,11 +58,11 @@ public class Car {
         this.yearOfIssue = yearOfIssue;
     }
 
-    public String getOwner() {
+    public User getOwner() {
         return owner;
     }
 
-    public void setOwner(String owner) {
+    public void setOwner(User owner) {
         this.owner = owner;
     }
 

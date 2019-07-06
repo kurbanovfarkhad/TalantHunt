@@ -23,8 +23,10 @@ public class MainController {
     @GetMapping
     public String main(Model model, @AuthenticationPrincipal User user){
         HashMap<Object, Object> data = new HashMap<>();
-        data.put("profile", user);
-        data.put("cars",carService.getAll());
+        if (user!=null){
+            data.put("profile", user);
+            data.put("cars",carService.getAll());
+        }
         model.addAttribute("frontendData", data);
         return "index";
     }

@@ -1,8 +1,10 @@
 package list_viewer.demo.controllers;
 
 import list_viewer.demo.domain.Car;
+import list_viewer.demo.domain.User;
 import list_viewer.demo.service.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,10 +28,13 @@ public class CarsController {
     public Car getOne(@PathVariable("id") Car car){
         return car;
     }
+
     @PostMapping
-    public Car add(@RequestBody Car car){
+    public Car add(@RequestBody Car car, @AuthenticationPrincipal User user){
+        car.setOwner(user);
         return carService.create(car);
     }
+
     @PutMapping("{id}")
     public Car update(
             @PathVariable("id") Car carFromDB,
@@ -37,6 +42,7 @@ public class CarsController {
     ){
         return carService.update(car,carFromDB);
     }
+
     @DeleteMapping("{id}")
     public void delete(@PathVariable("id") Car car){
         carService.delete(car);
