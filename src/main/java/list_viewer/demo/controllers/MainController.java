@@ -1,45 +1,31 @@
 package list_viewer.demo.controllers;
 
-import list_viewer.demo.domain.Car;
+import list_viewer.demo.domain.User;
 import list_viewer.demo.service.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import java.util.HashMap;
 
-import java.util.List;
-
-@RestController
-@RequestMapping("cars")
+@Controller
+@RequestMapping
 public class MainController {
-
-    private final CarService carService;
     @Autowired
+    private final CarService carService;
+
+
     public MainController(CarService carService) {
         this.carService = carService;
     }
-
     @GetMapping
-    public List<Car> list (){
-        return carService.getAll();
+    public String main(Model model, @AuthenticationPrincipal User user){
+        HashMap<Object, Object> data = new HashMap<>();
+        data.put("profile", user);
+        data.put("cars",carService.getAll());
+        model.addAttribute("frontendData", data);
+        return "index";
     }
-
-    @GetMapping("{id}")
-    public Car getOne(@PathVariable("id") Car car){
-        return car;
-    }
-    @PostMapping
-    public Car add(@RequestBody Car car){
-        return carService.create(car);
-    }
-    @PutMapping("{id}")
-    public Car update(
-            @PathVariable("id") Car carFromDB,
-            @RequestBody Car car
-    ){
-        return carService.update(car,carFromDB);
-    }
-    @DeleteMapping("{id}")
-    public void delete(@PathVariable("id") Car car){
-        carService.delete(car);
-    }
-
 }

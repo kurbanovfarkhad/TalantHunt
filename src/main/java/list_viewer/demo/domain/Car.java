@@ -10,7 +10,6 @@ import java.util.Date;
 public class Car {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-//    @Column(columnDefinition = "varchar(25)")
     private Long id;
     @Column(name="carModel")
     private String model;
@@ -26,6 +25,7 @@ public class Car {
     private String master;
     @Column(name = "aboutCar", columnDefinition = "varchar(300)")
     private String description;
+
 
     public Long getId() {
         return id;
