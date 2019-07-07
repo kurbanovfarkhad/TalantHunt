@@ -98,7 +98,8 @@ Vue.component('cars-row',{
     },
     template:
         '<div>'+
-        '{{item.id}} <i>{{item.description}}</i>' +
+        '{{item.id}} <i>{{item.yearOfIssue}}</i><i>{{item.phone}}</i><i>{{item.address}}</i><i>{{item.master}}</i><i>{{item.model}}</i><i>{{item.mileag}}</i>' +
+        '<i>{{item.description}}</i>' +
         '<input type="button" value="edit" @click="edit">' +
         '<input type="button" value="delete" @click="del">' +
         '</div>'

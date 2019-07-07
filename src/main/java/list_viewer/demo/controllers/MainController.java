@@ -1,5 +1,6 @@
 package list_viewer.demo.controllers;
 
+import list_viewer.demo.domain.CommonUser;
 import list_viewer.demo.domain.User;
 import list_viewer.demo.service.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
