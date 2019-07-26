@@ -7,13 +7,35 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.1"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <title>Document</title>
     <script th:inline="javascript">
         var frontendData = [[${frontendData}]];
     </script>
+
+    <style>
+        .ma{
+            margin: 1px;
+            padding: 5px;
+            border: 4px double black;
+        }
+        input{
+            margin: 3px;
+        }
+        th{
+            width: 110px;
+        }
+    </style>
+
 </head>
 <body>
+
+
+
 <div id="app"></div>
+
 <script src="/js/main.js"></script>
+
 </body>
 </html>

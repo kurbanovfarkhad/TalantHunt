@@ -1,25 +1,23 @@
-package list_viewer.demo.domain;
+package com.example.demo.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Date;
 
 @Entity
 @Table
-public class Car implements Serializable {
+public class Car {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+//    @Column(columnDefinition = "varchar(25)")
     private Long id;
     @Column(name="carModel")
     private String model;
     private int mileage;
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern = "yyyy")
     private Date yearOfIssue;
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "owner_id")
-    private User owner;
+    private String owner;
     @Column(name="clientPhone")
     private String phone;
     @Column(name="clientAddress")
@@ -28,7 +26,6 @@ public class Car implements Serializable {
     private String master;
     @Column(name = "aboutCar", columnDefinition = "varchar(300)")
     private String description;
-
 
     public Long getId() {
         return id;
@@ -58,11 +55,11 @@ public class Car implements Serializable {
         this.yearOfIssue = yearOfIssue;
     }
 
-    public User getOwner() {
+    public String getOwner() {
         return owner;
     }
 
-    public void setOwner(User owner) {
+    public void setOwner(String owner) {
         this.owner = owner;
     }
 

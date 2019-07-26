@@ -1,6 +1,6 @@
-package list_viewer.demo.service;
+package com.example.demo.services;
 
-import list_viewer.demo.domain.Car;
+import com.example.demo.domain.Car;
 
 import java.util.List;
 

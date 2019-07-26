@@ -1,4 +1,5 @@
 var api = Vue.resource('/cars{/id}');
+var apiR = Vue.resource('/registration')
 
 function getIndex(list, id) {
     for (var i = 0; i < list.length; i++ ) {
@@ -18,7 +19,6 @@ Vue.component('car-form',{
             model:'',
             mileage:null,
             yearOfIssue:null,
-            owner:'',
             phone:'',
             address:'',
             master:'',
@@ -26,16 +26,18 @@ Vue.component('car-form',{
         }
     },
     template:
-        '<div>' +
-        '<input type="text" placeholder="model" v-model="model" />' +
-        '<input type="number" placeholder="mileage" v-model="mileage" />' +
-        '<input type="date" value="2013-01-08" placeholder="yearOfIssue" v-model="yearOfIssue" />' +
-        '<input type="text" placeholder="write" v-model="description" />' +
-        '<input type="text" placeholder="phone" v-model="phone" />' +
-        '<input type="text" placeholder="address" v-model="address" />' +
-        '<input type="text" placeholder="master" v-model="master" />' +
-        '<input type="button" value="save" @click="save"/>' +
-        '</div>',
+    '<div>' +
+        '<tr>' +
+            '<input type="text" placeholder="model" v-model="model" /><br/>' +
+            '<input type="number" placeholder="mileage" v-model="mileage" /><br/>' +
+            '<input type="date" value="2013-01-08" placeholder="yearOfIssue" v-model="yearOfIssue" /><br/>' +
+            '<input type="text" placeholder="write" v-model="description" /><br/>' +
+            '<input type="text" placeholder="phone" v-model="phone" /><br/>' +
+            '<input type="text" placeholder="address" v-model="address" /><br/>' +
+            '<input type="text" placeholder="master" v-model="master" /><br/>' +
+            '<input type="button" class="btn btn-primary" value="save" @click="save"/>' +
+        '</tr>' +
+    '</div>',
     methods:{
         save(){
             var text = {
@@ -72,7 +74,7 @@ Vue.component('car-form',{
             this.address=newVal.address;
             this.master=newVal.master;
             this.model=newVal.model;
-            this.mileag=newVal.mileag;
+            this.mileage=newVal.mileage;
         }
     }
 });
@@ -97,31 +99,115 @@ Vue.component('cars-row',{
         }
     },
     template:
-        '<div>'+
-        '{{item.id}} <i>{{item.yearOfIssue}}</i><i>{{item.phone}}</i><i>{{item.address}}</i><i>{{item.master}}</i><i>{{item.model}}</i><i>{{item.mileag}}</i>' +
-        '<i>{{item.description}}</i>' +
-        '<input type="button" value="edit" @click="edit">' +
-        '<input type="button" value="delete" @click="del">' +
-        '</div>'
+    '<div>' +
+        '<tr>' +
+            '<th class="ma">{{item.id}}</th>' +
+            '<th class="ma">{{item.yearOfIssue}}</th>' +
+            '<th class="ma">{{item.phone}}</th>' +
+            '<th class="ma">{{item.address}}</th>' +
+            '<th class="ma">{{item.master}}</th>' +
+            '<th class="ma">{{item.model}}</th>' +
+            '<th class="ma">{{item.mileage}}</th>' +
+            '<th class="ma">{{item.description}}</th>' +
+            '<th class="ma">' +
+            '<input type="button" class="btn btn-primary" value="edit" @click="edit">' +
+            '<input type="button" class="btn btn-primary" value="delete" @click="del">' +
+            '</th>' +
+        '</tr>'+
+    '</div>'
 });
 
+Vue.component('registration',{
+    data:function(){
+        return{
+            username:"",
+            password:""
+        }
+    },
+    template:
+    '<div>' +
+    '<h1>regist</h1>' +
+        '<input type="text" name="username" placeholder="username" v-model="username"/>' +
+        '<input type="text" name="password" placeholder="password" v-model="password"/>' +
+        '<input type="button" value="submit" @click="reg">' +
+    '</div>',
+    methods:{
+        reg(){
+            var user = {
+              username:this.username,
+              password:this.password
+            };
+            apiR.save({},user).then(res=>console.log(res));
+        }
+    }
+});
 
+Vue.component('login',{
+    data:function(){
+        return{
+            username:"",
+            password:""
+        }
+    },
+    template:
+    '<div>' +
+        // '<for action="/login" method="post">' +
+        '<h1>login</h1>' +
+        '<input type="text" name="username" placeholder="username" v-model="username"/>' +
+        '<input type="text" name="password" placeholder="password" v-model="password"/>' +
+        '<input type="button" value="submit" @click="log">' +
+    '</div>',
+    methods:{
+        log(){
+            var user = {
+                username: this.username,
+                password: this.password
+            };
+            Vue.http.post('/login',user).then(res => console.log(res));
+        }
+    }
+});
+Vue.component('navbar',{
+    props:['profile'],
+    template:
+        '<div>' +
+            '<nav class="navbar navbar-light bg-dark">' +
+                '<a v-if="profile" style="color:white" href="/logout">{{profile.username}} logout</a>' +
+            '</nav>' +
+        '</div>'
+});
 var app = new Vue({
     el: '#app',
     template:
-        '<div>' +
-        '<div v-if="!profile">' +
-        '<a href="/login">Login Google</a>' +
+    '<div>' +
+        '<navbar :profile="profile"></navbar>' +
+        '<div class="container">' +
+            '<div v-if="!profile">' +
+                '<a href="/login">  login</a>' +
+            '</div>' +
+
+            '<div v-else>' +
+                '<car-form :cars = "cars" :item="item"></car-form>' +
+                '<div>' +
+                    '<tr>' +
+                        '<th class="ma">id</th>' +
+                        '<th class="ma">yearOfIssue</th>' +
+                        '<th class="ma">phone</th>' +
+                        '<th class="ma">address</th>' +
+                        '<th class="ma">master</th>' +
+                        '<th class="ma">model</th>' +
+                        '<th class="ma">mileage</th>' +
+                        '<th class="ma">description</th>' +
+                        '<th class="ma">but</th>' +
+                    '</tr>' +
+                '</div>'+
+                '<cars-row v-for="item in cars" v-bind:key="item.id" :item="item" :editcars="editcars" :cars="cars"/>' +
+            '</div>' +
         '</div>'+
-        '<div v-else>' +
-        '<a href="/logout">{{profile.name}} logout</a>' +
-        '<car-form :cars = "cars" :item="item"></car-form>'+
-        '<cars-row v-for="item in cars" v-bind:key="item.id" :item="item" :editcars="editcars" :cars="cars">' +
-        '</cars-row>' +
-        '</div>' +
-        '</div>',
+
+    '</div>',
     data: {
-        cars: [],
+        cars:[]|| frontendData.cars,
         item:'',
         profile:frontendData.profile
     },

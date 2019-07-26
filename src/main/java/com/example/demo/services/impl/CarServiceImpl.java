@@ -1,11 +1,10 @@
-package list_viewer.demo.service.impl;
+package com.example.demo.services.impl;
 
-import list_viewer.demo.domain.Car;
-import list_viewer.demo.repo.CarRepository;
-import list_viewer.demo.service.CarService;
+import com.example.demo.domain.Car;
+import com.example.demo.repo.CarRepository;
+import com.example.demo.services.CarService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,7 +24,6 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    @EntityGraph(attributePaths = "owner")
     public Car create(Car car) {
         return carRepository.save(car);
     }
