@@ -1,5 +1,6 @@
 var api = Vue.resource('/cars{/id}');
-var apiR = Vue.resource('/registration')
+var apiR = Vue.resource('/registration');
+var apiFilter = Vue.resource('/filter{/description}')
 
 function getIndex(list, id) {
     for (var i = 0; i < list.length; i++ ) {
@@ -54,8 +55,6 @@ Vue.component('car-form',{
                     res.json().then(data=>{
                         var index = getIndex(this.cars, data.id);
                         this.cars.splice(index, 1, data);
-                        this.description = '';
-                        this.id = '';
                     })
                 });
             } else{
@@ -63,6 +62,14 @@ Vue.component('car-form',{
                     this.cars.push(data);
                 }));
             }
+            this.description = '';
+            this.id = '';
+            this.yearOfIssue=null;
+            this.phone='';
+            this.address='';
+            this.master='';
+            this.model='';
+            this.mileage=null;
         }
     },
     watch:{
@@ -110,110 +117,161 @@ Vue.component('cars-row',{
             '<th class="ma">{{item.mileage}}</th>' +
             '<th class="ma">{{item.description}}</th>' +
             '<th class="ma">' +
-            '<input type="button" class="btn btn-primary" value="edit" @click="edit">' +
-            '<input type="button" class="btn btn-primary" value="delete" @click="del">' +
+                '<input type="button" class="btn btn-primary" value="edit" @click="edit">' +
+                '<input type="button" class="btn btn-primary" value="delete" @click="del">' +
             '</th>' +
         '</tr>'+
     '</div>'
 });
 
-Vue.component('registration',{
-    data:function(){
-        return{
-            username:"",
-            password:""
-        }
-    },
-    template:
-    '<div>' +
-    '<h1>regist</h1>' +
-        '<input type="text" name="username" placeholder="username" v-model="username"/>' +
-        '<input type="text" name="password" placeholder="password" v-model="password"/>' +
-        '<input type="button" value="submit" @click="reg">' +
-    '</div>',
-    methods:{
-        reg(){
-            var user = {
-              username:this.username,
-              password:this.password
-            };
-            apiR.save({},user).then(res=>console.log(res));
-        }
-    }
-});
+// Vue.component('registration',{
+//     data:function(){
+//         return{
+//             username:"",
+//             password:""
+//         }
+//     },
+//     template:
+//     '<div>' +
+//     '<h1>regist</h1>' +
+//         '<input type="text" name="username" placeholder="username" v-model="username"/>' +
+//         '<input type="text" name="password" placeholder="password" v-model="password"/>' +
+//         '<input type="button" value="submit" @click="reg">' +
+//     '</div>',
+//     methods:{
+//         reg(){
+//             var user = {
+//               username:this.username,
+//               password:this.password
+//             };
+//             apiR.save({},user).then(res=>console.log(res));
+//         }
+//     }
+// });
 
-Vue.component('login',{
-    data:function(){
-        return{
-            username:"",
-            password:""
-        }
-    },
-    template:
-    '<div>' +
-        // '<for action="/login" method="post">' +
-        '<h1>login</h1>' +
-        '<input type="text" name="username" placeholder="username" v-model="username"/>' +
-        '<input type="text" name="password" placeholder="password" v-model="password"/>' +
-        '<input type="button" value="submit" @click="log">' +
-    '</div>',
-    methods:{
-        log(){
-            var user = {
-                username: this.username,
-                password: this.password
-            };
-            Vue.http.post('/login',user).then(res => console.log(res));
-        }
-    }
-});
+// Vue.component('login',{
+//     data:function(){
+//         return{
+//             username:"",
+//             password:""
+//         }
+//     },
+//     template:
+//     '<div>' +
+//         // '<for action="/login" method="post">' +
+//         '<h1>login</h1>' +
+//         '<input type="text" name="username" placeholder="username" v-model="username"/>' +
+//         '<input type="text" name="password" placeholder="password" v-model="password"/>' +
+//         '<input type="button" value="submit" @click="log">' +
+//     '</div>',
+//     methods:{
+//         log(){
+//             var user = {
+//                 username: this.username,
+//                 password: this.password
+//             };
+//             Vue.http.post('/login',user).then(res => console.log(res));
+//         }
+//     }
+// });
+
 Vue.component('navbar',{
-    props:['profile'],
+    props:['profile','isAdminProfile'],
     template:
         '<div>' +
             '<nav class="navbar navbar-light bg-dark">' +
-                '<a v-if="profile" style="color:white" href="/logout">{{profile.username}} logout</a>' +
+                '<a v-if="profile" style="color:white" href="/logout">{{profile.username}}({{profile.authorities.toString()}}) logout</a>' +
+                '<a href="/admin" v-if="isAdminProfile" style="color:white"> administration page</a>'+
             '</nav>' +
         '</div>'
 });
 var app = new Vue({
     el: '#app',
-    template:
-    '<div>' +
-        '<navbar :profile="profile"></navbar>' +
-        '<div class="container">' +
-            '<div v-if="!profile">' +
-                '<a href="/login">  login</a>' +
-            '</div>' +
-
-            '<div v-else>' +
-                '<car-form :cars = "cars" :item="item"></car-form>' +
-                '<div>' +
-                    '<tr>' +
-                        '<th class="ma">id</th>' +
-                        '<th class="ma">yearOfIssue</th>' +
-                        '<th class="ma">phone</th>' +
-                        '<th class="ma">address</th>' +
-                        '<th class="ma">master</th>' +
-                        '<th class="ma">model</th>' +
-                        '<th class="ma">mileage</th>' +
-                        '<th class="ma">description</th>' +
-                        '<th class="ma">but</th>' +
-                    '</tr>' +
-                '</div>'+
-                '<cars-row v-for="item in cars" v-bind:key="item.id" :item="item" :editcars="editcars" :cars="cars"/>' +
-            '</div>' +
-        '</div>'+
-
-    '</div>',
     data: {
-        cars:[]|| frontendData.cars,
+        cars:[],
         item:'',
-        profile:frontendData.profile
+        profile:null,
+        isAdminProfile:false,
+        description:'',
+        findList:[],
+        switcher:false
     },
     methods:{
         editcars(item){
             this.item = item;
+        },
+        search(){
+            console.log(this.description);
+            if (this.description==='') {
+                this.switcher=false;
+            }else{
+                this.switcher = true;
+                this.findList = [];
+                apiFilter.get({description:this.description}).then(res => {
+                    console.log(res);
+                    res.json().then(data=>data.forEach(car=>this.findList.push(car)));
+                }, response => {
+                    console.log("fatal")
+                });
+            }
         }
+    },
+    template:
+    '<div>' +
+        '<navbar :profile="profile" :isAdminProfile="isAdminProfile"></navbar>' +
+        '<div class="container">' +
+            '<div v-if="!profile">' +
+                '<a href="/login">  login</a>' +
+            '</div>' +
+            '<div v-else>' +
+                '<car-form :cars = "cars" :item="item"></car-form>' +
+                '<input type="text" v-model="description">' +
+                '<input type="button" value="search" @click="search">' +
+
+                '<div>' +
+                    // '<table class="ma">' +
+                    '<tr>' +
+                    '<th class="ma">id</th>' +
+                    '<th class="ma">yearOfIssue</th>' +
+                    '<th class="ma">phone</th>' +
+                    '<th class="ma">address</th>' +
+                    '<th class="ma">master</th>' +
+                    '<th class="ma">model</th>' +
+                    '<th class="ma">mileage</th>' +
+                    '<th class="ma">description</th>' +
+                    '<th class="ma">but</th>' +
+                    '</tr>' +
+                    '<cars-row v-if="switcher" v-for="item in findList" v-bind:key="item.id" :item="item" :editcars="editcars" :cars="findList"/>' +
+                    '<cars-row v-else v-for="item in cars" v-bind:key="item.id" :item="item" :editcars="editcars" :cars="cars"/>' +
+                    // '</table>' +
+                '</div>' +
+            '</div>' +
+        '</div>'+
+    '</div>',
+    created(){
+        try {
+            this.cars=frontendData.cars;
+            this.profile = frontendData.profile;
+            this.isAdminProfile = frontendData.profile.authorities.toString().indexOf("ADMIN")>=0;
+        }catch (e) {
+            console.log(e);
+        }
+
     }
 });
+
+
+function generateApp() {
+    for (var i = 0; i < 20; i++) {
+        fetch('/cars',{method:'POST', headers:{'Content-Type':'application/json'},body:JSON.stringify({
+                description:"description - 1"+i,
+                yearOfIssue:null,
+                phone:'123123'+i,
+                address:'123123'+i,
+                master:'123123'+i,
+                model:'123123'+i,
+                mileage:123123+i
+            })}).then(res=>console.log(i));
+    }
+
+}

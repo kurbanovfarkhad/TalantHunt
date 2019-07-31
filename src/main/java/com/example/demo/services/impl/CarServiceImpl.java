@@ -38,4 +38,9 @@ public class CarServiceImpl implements CarService {
         BeanUtils.copyProperties(car,carFromDB,"id");
         return carRepository.save(carFromDB);
     }
+
+    @Override
+    public List<Car> findCarsByDescription(String description) {
+        return carRepository.findAllByDescription(description);
+    }
 }

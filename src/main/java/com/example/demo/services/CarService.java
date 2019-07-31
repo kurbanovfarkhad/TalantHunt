@@ -9,4 +9,6 @@ public interface CarService {
     Car create(Car car);
     void delete(Car car);
     Car update(Car car, Car carFromDB);
+
+    List<Car> findCarsByDescription(String description);
 }

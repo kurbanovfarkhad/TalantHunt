@@ -1,37 +1,32 @@
 package com.example.demo.controllers;
 
-import com.example.demo.domain.Role;
 import com.example.demo.domain.User;
-import com.example.demo.repo.UserRepository;
+import com.example.demo.services.UserManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.util.Collections;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("registration")
 public class RegistrationController {
 
-    @GetMapping
-    public String registration(){
-        return "registration";
-    }
     @Autowired
-    private final UserRepository userRepository;
+    private final UserManagementService userManagementService;
 
-    public RegistrationController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public RegistrationController(UserManagementService userManagementService) {
+        this.userManagementService = userManagementService;
     }
-
 
     @PostMapping
-    public String addUser(User user){
-        user.setActive(true);
-        user.setRoles(Collections.singleton(Role.USER));
-        userRepository.save(user);
-        return "redirect:/login";
+    public String registration( User user, Model model){
+        if(userManagementService.isVacant(user)){
+            userManagementService.registration(user);
+            return "redirect:/login";
+        }else {
+            model.addAttribute("error",false);
+            return "registration";
+        }
     }
+
 }

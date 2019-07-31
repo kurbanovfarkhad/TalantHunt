@@ -24,10 +24,10 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
-		<!--<dependency>-->
-			<!--<groupId>org.flywaydb</groupId>-->
-			<!--<artifactId>flyway-core</artifactId>-->
-		<!--</dependency>-->
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-core</artifactId>
+		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-thymeleaf -->
 		<dependency>
@@ -56,11 +56,11 @@
 			<!--<version>2.1.5.RELEASE</version>-->
 		<!--</dependency>-->
 
-		<!--<dependency>-->
-			<!--<groupId>org.springframework.session</groupId>-->
-			<!--<artifactId>spring-session-jdbc</artifactId>-->
-			<!--<version>2.0.2.RELEASE</version>-->
-		<!--</dependency>-->
+		<dependency>
+			<groupId>org.springframework.session</groupId>
+			<artifactId>spring-session-jdbc</artifactId>
+			<version>2.0.2.RELEASE</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

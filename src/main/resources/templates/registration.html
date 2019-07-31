@@ -2,14 +2,33 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <title>reg </title>
 </head>
-<body>
+<script>
 
-<form th:action="@{/registration}" method="post">
-    <div><label> User Name : <input type="text" name="username"/> </label></div>
-    <div><label> Password: <input type="password" name="password"/> </label></div>
-    <div><input type="submit" value="Sign In"/></div>
-</form>
+    function generateUsers() {
+        for (var i = 0; i < 20; i++) {
+            fetch('/registration',{method:'POST', headers:{'Content-Type':'application/json'},body:JSON.stringify({
+                    username:"user - "+i,
+                    password:1
+                })}).then(res=>console.log(res));
+        }
+
+    }
+</script>
+<body>
+    <div class="container">
+        <div th:if="${error}">
+            already exist
+        </div>
+        <form th:action="@{/registration}" method="post">
+            <div><label> User Name : <input type="text" name="username"/> </label></div>
+            <div><label> Password: <input type="password" name="password"/> </label></div>
+            <div><input type="submit" value="Sign In"/></div>
+        </form>
+        <a href="/login">login</a>
+    </div>
 </body>
 </html>
